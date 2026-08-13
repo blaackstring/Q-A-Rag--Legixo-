@@ -38,7 +38,7 @@ The Pinecone index is **auto-created** on first ingest. If you make it manually:
 python -m src.ingest    OR can do request to url/ingest API          # or: python -m src.ingest --reset (wipe first)
 
 # 2. Start server
-python -m src.api                 # → http://localhost:8000/docs (Swagger)
+uv run uvicorn src.app:app --reload --port 8000             # → http://localhost:8000/docs (Swagger)
 ```
 
 ---
@@ -70,7 +70,7 @@ curl -X POST http://localhost:8000/ingest -H "Content-Type: application/json" -d
 
 ```
 src/
-  api.py              FastAPI routes
+  app.py              FastAPI routes
   graph.py            LangGraph pipeline + branch router
   state.py            shared graph state
   nodes/              retrieve · grade · rewrite · answer · refuse
