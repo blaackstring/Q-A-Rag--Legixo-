@@ -1,0 +1,24 @@
+# Core dependencies for the Legixo take-home Q&A API.
+# Tested together with Python 3.12 against the "new" LangChain 1.x stack
+# (langchain 1.3.x, langgraph 1.2.x, pinecone 9.x). Pins are lower bounds only.
+
+# Web API
+fastapi>=0.110
+uvicorn[standard]>=0.29
+
+# LLM orchestration + document pipelines (LangChain 1.x ecosystem)
+langchain>=1.0
+langchain-core>=1.0
+langchain-openai>=0.2
+langgraph>=1.0
+
+# Document loading + chunking (recursive character splitter)
+langchain-community>=0.4
+langchain-text-splitters>=0.3
+
+# Vector database (real Pinecone service + client)
+pinecone>=5.0
+
+# CLI + config
+python-dotenv>=1.0
+pydantic>=2.6
