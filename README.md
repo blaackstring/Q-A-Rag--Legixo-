@@ -1,6 +1,6 @@
 # Legal Document Q&A API (RAG)
 
-Answers questions **only from your documents** using RAG (LangGraph + Pinecone + OpenAI). No guessing, every answer has citations.
+**FLOW**
 
 ```
 START → ingestt->retrieve → grade → [answer | rewrite→retrieve (loop) | refuse]
