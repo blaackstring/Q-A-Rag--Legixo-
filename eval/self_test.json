@@ -1,28 +1,196 @@
 {
   "_meta": {
     "description": "Self-test cases for the Legixo take-home Q&A API. In-corpus cases check that the answer is grounded and that the expected source file(s) appear in citations. Out-of-corpus cases (O-*) check that the API refuses instead of inventing an answer.",
-    "how_to_run": "Start the API (uvicorn src.api:app), ingest the corpus, then run: python eval/run_self_test.py",
-    "pass_fail_note": "'pass' is filled by eval/run_self_test.py after a live run with real keys; 'notes' are the author's own remarks."
+    "how_to_run": "Start the API (uvicorn src.app:app), ingest the corpus, then run: python eval/run_self_test.py"
   },
+
+
   "cases": [
-    {"id": 1, "type": "in_corpus", "question": "What notice period applies when Bluecrest or Priya Nambiar ends the employment agreement?", "expected_source_files": ["02_employment_agreement_excerpt.md"], "expected_facts": ["60 days", "laptops", "badges", "source code"], "pass": false, "notes": "Gold-aligned question from sample test set."},
-    {"id": 2, "type": "in_corpus", "question": "How long is the non-compete after leaving Bluecrest, and when does it apply?", "expected_source_files": ["02_employment_agreement_excerpt.md"], "expected_facts": ["12 months", "direct competitor", "same city", "client list"], "pass": false, "notes": "Checks multi-condition answer."},
-    {"id": 3, "type": "in_corpus", "question": "What kinds of information are called out as confidential in the Bluecrest excerpt?", "expected_source_files": ["02_employment_agreement_excerpt.md"], "expected_facts": ["pricing sheets", "roadmaps", "customer names"], "pass": false, "notes": ""},
-    {"id": 4, "type": "in_corpus", "question": "What is the civil suit number and who are the parties in the transport invoice dispute memo?", "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"], "expected_facts": ["CV-2024-8812", "Arvind Mehta", "Northfield"], "pass": false, "notes": ""},
-    {"id": 5, "type": "in_corpus", "question": "Under the memo, what limitation period applies to contract claims under the fictional Riverside Code?", "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"], "expected_facts": ["three years", "breach"], "pass": false, "notes": ""},
-    {"id": 6, "type": "in_corpus", "question": "When is the next hearing in Arvind Mehta v. Northfield, and what is scheduled?", "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"], "expected_facts": ["15 August 2025", "witness", "billing"], "pass": false, "notes": ""},
-    {"id": 7, "type": "in_corpus", "question": "How many clear days before the listed date must parties file written arguments under the hearing notice rules?", "expected_source_files": ["03_hearing_notice_template.md"], "expected_facts": ["seven", "clear days"], "pass": false, "notes": ""},
-    {"id": 8, "type": "in_corpus", "question": "What time is case CV-2024-8812 listed, and what is it for?", "expected_source_files": ["03_hearing_notice_template.md"], "expected_facts": ["11:00", "set-off"], "pass": false, "notes": ""},
-    {"id": 9, "type": "in_corpus", "question": "What happened to case CV-2023-4401 (Lakeview Society v. City Water Board), and what is the next date?", "expected_source_files": ["03_hearing_notice_template.md"], "expected_facts": ["adjourned", "22 September 2025"], "pass": false, "notes": ""},
-    {"id": 10, "type": "in_corpus", "question": "For commercial suits above five lakh fictional rupees, what does Section 14 say about mediation?", "expected_source_files": ["04_statute_style_excerpt_fictional.md"], "expected_facts": ["mediation", "30 days", "waive"], "pass": false, "notes": ""},
-    {"id": 11, "type": "in_corpus", "question": "If a contract fixes no interest rate, what rate may be awarded on admitted dues under Section 22?", "expected_source_files": ["04_statute_style_excerpt_fictional.md"], "expected_facts": ["9%", "simple interest", "demand"], "pass": false, "notes": ""},
-    {"id": 12, "type": "in_corpus", "question": "What settlement offer did Northfield make in the counsel notes, and what counter-instruction did the client give?", "expected_source_files": ["05_counsel_notes_settlement.md"], "expected_facts": ["70%", "85%", "counterclaim", "1 August 2025"], "pass": false, "notes": "Two-part answer - tests whether the answer covers both halves."},
-    {"id": 13, "type": "in_corpus", "question": "Are the settlement talks described in the counsel notes binding? What is the reminder?", "expected_source_files": ["05_counsel_notes_settlement.md"], "expected_facts": ["without prejudice", "term sheet"], "pass": false, "notes": ""},
-    {"id": 14, "type": "in_corpus", "question": "Who is the lessor and lessee for Unit 4B at Harbor View Tower, and what is the monthly rent?", "expected_source_files": ["06_property_lease_clause.md"], "expected_facts": ["Kiran Patel", "Harbor Bean", "45000"], "pass": false, "notes": "Currency symbols can trip naive fact checks; runner lowercases and strips ₹/commas."},
-    {"id": 15, "type": "in_corpus", "question": "What is the security deposit amount, and within how many days must it be refunded after handover?", "expected_source_files": ["06_property_lease_clause.md"], "expected_facts": ["135000", "45 days"], "pass": false, "notes": ""},
-    {"id": 16, "type": "in_corpus", "question": "Is subletting allowed for the Harbor View lease without extra steps?", "expected_source_files": ["06_property_lease_clause.md"], "expected_facts": ["not allowed", "written consent"], "pass": false, "notes": ""},
-    {"id": "O1", "type": "out_of_corpus", "question": "What is the population of Riverside city?", "expected_behavior": "refuse_or_not_found", "expected_source_files": [], "pass": false, "notes": "Expect status=not_found and empty citations."},
-    {"id": "O2", "type": "out_of_corpus", "question": "What penalty applies if Priya breaches the non-compete?", "expected_behavior": "refuse_or_not_found_or_partial_without_invented_penalty", "expected_source_files": [], "pass": false, "notes": "Partially related chunks may surface; must NOT invent a penalty."},
-    {"id": "O3", "type": "out_of_corpus", "question": "Who won case CV-2024-8812?", "expected_behavior": "refuse_or_not_found", "expected_source_files": [], "pass": false, "notes": "Dispute is ongoing; expecting refusal."}
+    {
+      "id": 1,
+      "type": "in_corpus",
+      "question": "What notice period applies when Bluecrest or Priya Nambiar ends the employment agreement?",
+      "expected_source_files": ["02_employment_agreement_excerpt.md"],
+      "expected_facts": ["60 days", "laptops", "badges", "source code"],
+      "pass": false,
+      "notes": "Gold-aligned question from sample test set."
+    },
+    
+    {
+      "id": 2,
+      "type": "in_corpus",
+      "question": "How long is the non-compete after leaving Bluecrest, and when does it apply?",
+      "expected_source_files": ["02_employment_agreement_excerpt.md"],
+      "expected_facts": [
+        "12 months",
+        "direct competitor",
+        "same city",
+        "client list"
+      ],
+      "pass": false,
+      "notes": "Checks multi-condition answer."
+    },
+    {
+      "id": 3,
+      "type": "in_corpus",
+      "question": "What kinds of information are called out as confidential in the Bluecrest excerpt?",
+      "expected_source_files": ["02_employment_agreement_excerpt.md"],
+      "expected_facts": ["pricing sheets", "roadmaps", "customer names"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "type": "in_corpus",
+      "question": "What is the civil suit number and who are the parties in the transport invoice dispute memo?",
+      "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"],
+      "expected_facts": ["CV-2024-8812", "Arvind Mehta", "Northfield"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "type": "in_corpus",
+      "question": "Under the memo, what limitation period applies to contract claims under the fictional Riverside Code?",
+      "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"],
+      "expected_facts": ["three years", "breach"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "type": "in_corpus",
+      "question": "When is the next hearing in Arvind Mehta v. Northfield, and what is scheduled?",
+      "expected_source_files": ["01_matter_memo_arvind_v_northfield.md"],
+      "expected_facts": ["15 August 2025", "witness", "billing"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "type": "in_corpus",
+      "question": "How many clear days before the listed date must parties file written arguments under the hearing notice rules?",
+      "expected_source_files": ["03_hearing_notice_template.md"],
+      "expected_facts": ["seven", "clear days"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "type": "in_corpus",
+      "question": "What time is case CV-2024-8812 listed, and what is it for?",
+      "expected_source_files": ["03_hearing_notice_template.md"],
+      "expected_facts": ["11:00", "set-off"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "type": "in_corpus",
+      "question": "What happened to case CV-2023-4401 (Lakeview Society v. City Water Board), and what is the next date?",
+      "expected_source_files": ["03_hearing_notice_template.md"],
+      "expected_facts": ["adjourned", "22 September 2025"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "type": "in_corpus",
+      "question": "For commercial suits above five lakh fictional rupees, what does Section 14 say about mediation?",
+      "expected_source_files": ["04_statute_style_excerpt_fictional.md"],
+      "expected_facts": ["mediation", "30 days", "waive"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "type": "in_corpus",
+      "question": "If a contract fixes no interest rate, what rate may be awarded on admitted dues under Section 22?",
+      "expected_source_files": ["04_statute_style_excerpt_fictional.md"],
+      "expected_facts": ["9%", "simple interest", "demand"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "type": "in_corpus",
+      "question": "What settlement offer did Northfield make in the counsel notes, and what counter-instruction did the client give?",
+      "expected_source_files": ["05_counsel_notes_settlement.md"],
+      "expected_facts": ["70%", "85%", "counterclaim", "1 August 2025"],
+      "pass": false,
+      "notes": "Two-part answer - tests whether the answer covers both halves."
+    },
+    {
+      "id": 13,
+      "type": "in_corpus",
+      "question": "Are the settlement talks described in the counsel notes binding? What is the reminder?",
+      "expected_source_files": ["05_counsel_notes_settlement.md"],
+      "expected_facts": ["without prejudice", "term sheet"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "type": "in_corpus",
+      "question": "Who is the lessor and lessee for Unit 4B at Harbor View Tower, and what is the monthly rent?",
+      "expected_source_files": ["06_property_lease_clause.md"],
+      "expected_facts": ["Kiran Patel", "Harbor Bean", "45000"],
+      "pass": false,
+      "notes": "Currency symbols can trip naive fact checks; runner lowercases and strips ₹/commas."
+    },
+    {
+      "id": 15,
+      "type": "in_corpus",
+      "question": "What is the security deposit amount, and within how many days must it be refunded after handover?",
+      "expected_source_files": ["06_property_lease_clause.md"],
+      "expected_facts": ["135000", "45 days"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": 16,
+      "type": "in_corpus",
+      "question": "Is subletting allowed for the Harbor View lease without extra steps?",
+      "expected_source_files": ["06_property_lease_clause.md"],
+      "expected_facts": ["not allowed", "written consent"],
+      "pass": false,
+      "notes": ""
+    },
+    {
+      "id": "O1",
+      "type": "out_of_corpus",
+      "question": "What is the population of Riverside city?",
+      "expected_behavior": "refuse_or_not_found",
+      "expected_source_files": [],
+      "pass": false,
+      "notes": "Expect status=not_found and empty citations."
+    },
+    {
+      "id": "O2",
+      "type": "out_of_corpus",
+      "question": "What penalty applies if Priya breaches the non-compete?",
+      "expected_behavior": "refuse_or_not_found_or_partial_without_invented_penalty",
+      "expected_source_files": [],
+      "pass": false,
+      "notes": "Partially related chunks may surface; must NOT invent a penalty."
+    },
+    {
+      "id": "O3",
+      "type": "out_of_corpus",
+      "question": "Who won case CV-2024-8812?",
+      "expected_behavior": "refuse_or_not_found",
+      "expected_source_files": [],
+      "pass": false,
+      "notes": "Dispute is ongoing; expecting refusal."
+    },
+    {
+      "id": "O4",
+      "type": "out_of_corpus",
+      "question": "What is the LangGraph layout of this project?",
+      "expected_behavior": "refuse_or_not_found",
+      "expected_source_files": [],
+      "pass": false,
+      "notes": "Asks about the codebase's LangGraph layout; corpus is legal notes only, so expect not_found."
+    }
   ]
 }

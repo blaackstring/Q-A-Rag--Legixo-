@@ -32,6 +32,7 @@ grounding against a known target. Machine-readable copy: `self_test.json`.
 | O1 | What is the population of Riverside city? | Say **not found in corpus** / **cannot answer** | Not in any sample file |
 | O2 | What penalty applies if Priya breaches the non-compete? | **Not stated**; must not invent | Employment file has terms only, no penalty section |
 | O3 | Who won case CV-2024-8812? | **Not stated**; dispute ongoing | Memo describes stage/hearing, not outcome |
+| O4 | What is the LangGraph layout of this project? | **Not stated** | Corpus is legal notes only; no codebase content |
 
 ## How we use this in the repo
 
